@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 mogorou
+Copyright (c) 2026 Satyr-Astry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-注意：本 LICENSE 仅覆盖本仓库的自有代码。
-- 内置/依赖的上游组件许可见 `licenses/`（ComfyUI=GPL-3.0、ComfyUI-GGUF=Apache-2.0、
-  Electron=MIT、Python=PSF、PyTorch=BSD-3、NVIDIA CUDA 运行库）。
-- 模型 Qwen-Image-2.1 采用 **Qwen Research License（仅非商用）**，
-  不得用于商业用途；商用须另行取得 Alibaba 许可（model-business@notice.qwencloud.com）。

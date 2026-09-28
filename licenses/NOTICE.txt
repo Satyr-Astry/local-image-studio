@@ -1,0 +1,49 @@
+══════════════════════════════════════════════════════════════════
+  本软件（下称"本应用"）内含的第三方组件 —— 署名与许可 NOTICE
+  生成日期：2026-09-28
+══════════════════════════════════════════════════════════════════
+
+【一】Qwen 模型材料署名（Qwen Research License Agreement §3.c 要求的原文，请勿删改）
+──────────────────────────────────────────────────────────────────
+Qwen is licensed under the Qwen RESEARCH LICENSE AGREEMENT,
+Copyright (c) 2026 Hangzhou Tongyi Laboratory Technology Co., Ltd.
+All Rights Reserved.
+──────────────────────────────────────────────────────────────────
+本应用使用了 Qwen 模型材料（Qwen-Image-2.1 及其衍生/量化部件），
+许可正文见本目录 Qwen-Research-License.txt
+（原始地址：https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE）。
+
+⚠ 使用限制（协议 §1.i / §2.a / §2.b）：
+   Qwen Materials 仅可用于**非商业用途**（限于研究或评估）。
+   如需商用，必须另行向 Qwen 取得商业许可：model-business@notice.qwencloud.com
+
+【二】Built with Qwen
+──────────────────────────────────────────────────────────────────
+本应用基于 Qwen 模型材料构建（Built with Qwen）。
+
+【三】产品名称说明（协议 §4.c）
+──────────────────────────────────────────────────────────────────
+"Qwen" 不得作为衍生作品或产品的**主要名称/标识**；描述性使用（如
+"内置 Qwen-Image-2.1 引擎"）是允许的。本应用的产品名由分发者自行确定。
+
+【四】组件清单与许可
+──────────────────────────────────────────────────────────────────
+详细表格见同目录《第三方组件与许可清单.md》。要点：
+  · ComfyUI                GPL-3.0      → 见 ComfyUI-GPL-3.0.txt
+  · ComfyUI-GGUF           Apache-2.0   → 见 ComfyUI-GGUF-Apache-2.0.txt
+  · Electron / Chromium    MIT / BSD    → 见 Electron-MIT.txt、desktop/LICENSES.chromium.html
+  · Python 3.13.12         PSF          → 见 Python-PSF.txt
+  · PyTorch 2.10.0+cu130   BSD-3-Clause → 见 PyTorch-BSD-3-Clause.txt、PyTorch-NOTICE.txt
+                           （含 NVIDIA CUDA/cuDNN 运行库，按 NVIDIA EULA 随应用再分发）
+  · 其余 Python 依赖        各自许可      → 见 runtime/Lib/site-packages/*.dist-info/ 内的许可文件
+  · 模型权重               Qwen Research License（非商用）→ 见 Qwen-Research-License.txt
+
+【五】GPL-3.0 源码可获取性说明（GPL-3.0 §6）
+──────────────────────────────────────────────────────────────────
+本应用以**未修改的源码形式**包含 ComfyUI（Python 源码位于本目录
+..\ComfyUI\），并随附其完整许可文本。ComfyUI 的源代码亦可从
+https://github.com/comfyanonymous/ComfyUI 获取。
+本应用的应用层（app\ 与 desktop\ 内的程序）为独立程序，通过本机 HTTP
+接口（127.0.0.1）与 ComfyUI 通信，未与 ComfyUI 源码合并，二者构成聚合
+（mere aggregation），不因此改变各自许可。
+══════════════════════════════════════════════════════════════════

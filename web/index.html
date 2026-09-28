@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Image Studio</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="nav">
+    <div class="brand">
+      <div class="mark">Q</div>
+      <div><div class="bt">Qwen-Image-2.1</div><div class="bs">本地绘画工作台</div></div>
+    </div>
+    <button class="navbtn active" data-page="gen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l10-10M14 4l6 6-3 3-6-6z"/></svg><span>文生图</span></button>
+    <button class="navbtn" data-page="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M3 21h18"/></svg><span>图像编辑</span></button>
+    <button class="navbtn" data-page="cutout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3v12a6 6 0 0012 0V3"/><path d="M18 21l3-4M18 21l-3-4"/></svg><span>抠图/透明</span></button>
+    <button class="navbtn" data-page="queue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>队列</span></button>
+    <button class="navbtn" data-page="gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 15l5-4 4 3 3-2 6 5"/></svg><span>画廊</span></button>
+    <button class="navbtn" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 00-1.7-1L14.5 3h-5l-.4 2.6a7 7 0 00-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 000 2l-2 1.5 2 3.4 2.3-1a7 7 0 001.7 1l.4 2.6h5l.4-2.6a7 7 0 001.7-1l2.3 1 2-3.4L19 13a7 7 0 00.1-1z"/></svg><span>设置</span></button>
+    <div class="svc" id="svc">
+      <div class="row1"><span class="dot" id="svcDot"></span><span id="svcTxt">检测中…</span></div>
+      <div class="svc-btns">
+        <button class="mini" id="sbStart" onclick="svcAct('start')">启动</button>
+        <button class="mini ghost" id="sbRestart" onclick="svcAct('restart')">重启</button>
+      </div>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ============ 文生图 ============ -->
+    <section class="page forms" id="page-gen">
+      <h2>文生图</h2>
+      <p class="hint">描述画面 → 一键出图（结果在「队列」和「画廊」里看）</p>
+
+      <div class="card">
+        <div class="ctitle"><i></i>角色与画风</div>
+        <label>人物预设（锁定角色）</label>
+        <div class="combo" id="charCombo">
+          <select id="genChar" class="hidden-select" tabindex="-1" aria-hidden="true"></select>
+          <button class="combo-field" id="charField" type="button">
+            <span id="charLabel">（空白）</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="combo-list" id="charList"></div>
+        </div>
+        <label style="margin-top:16px">画风预设</label>
+        <div class="combo" id="styleCombo">
+          <select id="genStyle" class="hidden-select" tabindex="-1" aria-hidden="true"></select>
+          <button class="combo-field" id="styleField" type="button">
+            <span id="styleLabel">真人写实</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="combo-list" id="styleList"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ctitle"><i></i>画面描述</div>
+        <label>画面描述（中文/英文均可）</label>
+        <textarea id="genPrompt" rows="3" placeholder="例如：坐在空教室地板上，午后侧光，看向镜头"></textarea>
+        <label style="margin-top:16px">负向提示词（CFG&gt;1 时生效）</label>
+        <textarea id="genNeg" rows="2"></textarea>
+      </div>
+
+      <div class="card">
+        <div class="ctitle"><i></i>参数</div>
+        <div class="grid4">
+          <div><label>尺寸</label><select id="genSize"></select></div>
+          <div><label>步数</label><input id="genSteps" type="number" value="25" min="8" max="60"></div>
+          <div><label>CFG</label><input id="genCfg" type="number" value="2.5" step="0.5" min="1" max="8"></div>
+          <div><label>张数（多种子）</label><input id="genCount" type="number" value="1" min="1" max="20"></div>
+        </div>
+        <div class="row" style="margin-top:16px">
+          <div><label>种子（-1=随机）</label><input id="genSeed" type="number" value="-1"></div>
+          <div></div>
+        </div>
+        <details><summary>合成后的提示词预览</summary><pre id="genPreview"></pre></details>
+        <div class="grow"></div>
+        <button class="primary" id="genGo">开始生成</button>
+      </div>
+    </section>
+
+    <!-- ============ 图像编辑 ============ -->
+    <section class="page forms hidden" id="page-edit">
+      <h2>图像编辑</h2>
+      <p class="hint">参考图会同时喂给视觉塔和 VAE；输出尺寸自动跟随第一张参考图，最多 10 张。</p>
+      <div class="card">
+        <div class="ctitle"><i></i>参考图与指令</div>
+        <label>参考图（可多选，第一张决定输出尺寸）</label>
+        <input id="editFiles" type="file" accept="image/*" multiple>
+        <div class="thumbs" id="editThumbs"></div>
+        <label style="margin-top:16px">编辑指令</label>
+        <textarea id="editPrompt" rows="5">Change only her clothing: replace the skirt with a bright red micro bikini bottom. Keep her face, hair, skin tone, body shape, pose and the background exactly identical.</textarea>
+        <div class="row" style="margin-top:16px">
+          <div><label>步数</label><input id="editSteps" type="number" value="25" min="8" max="60"></div>
+          <div><label>种子（-1=随机）</label><input id="editSeed" type="number" value="-1"></div>
+        </div>
+        <div class="grow"></div>
+        <button class="primary" id="editGo">开始编辑</button>
+      </div>
+    </section>
+
+    <!-- ============ 抠图 ============ -->
+    <section class="page forms hidden" id="page-cutout">
+      <h2>抠图 / 透明背景</h2>
+      <p class="hint">模型原生 RGBA 输出，直接得到带透明通道的 PNG。</p>
+      <div class="card">
+        <div class="ctitle"><i></i>原图与主体</div>
+        <label>原图</label>
+        <input id="cutFiles" type="file" accept="image/*">
+        <div class="thumbs" id="cutThumbs"></div>
+        <label style="margin-top:16px">主体描述（可选，如 woman / person / product）</label>
+        <input id="cutSubject" type="text" placeholder="woman">
+        <div class="row" style="margin-top:16px">
+          <div><label>步数</label><input id="cutSteps" type="number" value="25" min="8" max="60"></div>
+          <div><label>种子（-1=随机）</label><input id="cutSeed" type="number" value="31337"></div>
+        </div>
+        <div class="grow"></div>
+        <button class="primary" id="cutGo">开始抠图</button>
+      </div>
+    </section>
+
+    <!-- ============ 队列 ============ -->
+    <section class="page hidden" id="page-queue">
+      <h2>任务队列 <span class="stat" id="qStat"></span></h2>
+      <p class="hint">串行执行（12GB 显存不并发）。每完成一张会自动出现在下面。</p>
+      <div id="jobList" class="jobs"></div>
+    </section>
+
+    <!-- ============ 画廊 ============ -->
+    <section class="page hidden" id="page-gallery">
+      <h2>画廊 <span class="hspace"></span>
+        <button class="mini" onclick="openFolder()">打开输出目录</button>
+        <button class="mini ghost" onclick="loadGallery()">刷新</button>
+      </h2>
+      <div id="gallery" class="gallery"></div>
+    </section>
+
+    <!-- ============ 设置 ============ -->
+    <section class="page forms hidden" id="page-settings">
+      <h2>设置</h2>
+
+      <div class="card">
+        <div class="ctitle"><i></i>引擎与路径</div>
+        <label>ComfyUI 地址</label>
+        <div class="row">
+          <div style="flex:2 1 200px"><input id="cfgHost" placeholder="127.0.0.1"></div>
+          <div style="flex:1 1 100px"><input id="cfgPort" type="number" placeholder="8188"></div>
+        </div>
+        <label style="margin-top:16px">ComfyUI 安装目录</label><input id="cfgDir">
+        <label style="margin-top:16px">实例 Python（.venv）</label><input id="cfgPy">
+        <label style="margin-top:16px">输出目录</label><input id="cfgOut">
+        <label style="margin-top:16px">模型文件名</label>
+        <div class="grid3">
+          <div><label style="margin-bottom:6px">主模型</label><input id="cfgUnet"></div>
+          <div><label style="margin-bottom:6px">文本编码器</label><input id="cfgClip"></div>
+          <div><label style="margin-bottom:6px">VAE</label><input id="cfgVae"></div>
+        </div>
+        <div class="grow"></div>
+        <button class="primary" id="cfgSave">保存配置</button>
+      </div>
+
+      <div class="card">
+        <div class="ctitle"><i></i>预设导出 / 导入</div>
+        <p class="hint">预设（人物 / 画风 / 尺寸）存在 app 目录的 presets.json。增改删在「文生图」页操作；
+          这里可以整体导出备份，或导入别人分享的预设。</p>
+        <div class="svcbox" style="margin-top:14px;margin-bottom:0">
+          <button class="mini" id="presetExport">导出预设 (.json)</button>
+          <button class="mini ghost" id="presetImportBtn">导入预设…</button>
+        </div>
+        <input id="presetImport" type="file" accept=".json,application/json" style="display:none">
+      </div>
+
+      <div class="card">
+        <div class="ctitle"><i></i>服务</div>
+        <div class="svcbox">
+          <button class="mini" id="svcStart" onclick="svcAct('start')">启动</button>
+          <button class="mini ghost" id="svcRestart" onclick="svcAct('restart')">重启</button>
+          <button class="mini ghost" id="svcStop" onclick="svcAct('stop')" title="只停止由本应用启动的引擎">停止</button>
+        </div>
+        <div class="view-head">服务日志（尾部）</div>
+        <pre id="svcLog" class="log"></pre>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ 预设编辑弹窗 ============ -->
+<div id="pmask">
+  <div id="pdialog">
+    <h3 id="pTitle">编辑预设</h3>
+    <div class="sub">填好名称与描述，保存后会立即出现在下拉框里</div>
+    <label>名称</label><input id="pName" placeholder="例如：常用女主">
+    <div id="pSingle">
+      <label style="margin-top:16px">锁定描述（会拼进提示词）</label>
+      <textarea id="pText" rows="6" placeholder="例如：24-year-old adult woman, East Asian facial features …"></textarea>
+    </div>
+    <div id="pPair">
+      <label style="margin-top:16px">前置词（拼在提示词最前）</label>
+      <input id="pPre" placeholder="Photorealistic photograph, ">
+      <label style="margin-top:16px">后置词（拼在提示词最后）</label>
+      <textarea id="pPost" rows="3" placeholder=", film grain, 8k"></textarea>
+    </div>
+    <div class="row">
+      <button class="mini" id="pCancel">取消</button>
+      <button class="mini big" id="pOk">保存</button>
+    </div>
+  </div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

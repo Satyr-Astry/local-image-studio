@@ -1,0 +1,10 @@
+{
+  "name": "local-image-studio",
+  "productName": "Local Image Studio",
+  "version": "0.1.0",
+  "description": "本地绘图工作台（本地绘画应用桌面外壳，内置 Qwen-Image-2.1 引擎）",
+  "main": "main.js",
+  "license": "MIT",
+  "private": true,
+  "comment": "外壳仅做「拉起包内后端 + 开原生窗口」，不含任何模型或推理代码；模型许可见 ../licenses/"
+}

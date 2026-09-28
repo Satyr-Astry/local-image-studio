@@ -1,0 +1,38 @@
+# 模型权重（19 GB，不入库；用 tools/download_models.py 走镜像下载）
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+models/
+
+# 运行产物与本地状态
+output/
+data/
+input/
+*.log
+config.json
+presets.json
+我的预设_私有.json
+smoke-result.json
+close-result.json
+audit-*.png
+splash-*.png
+
+# 运行时与缓存
+runtime/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# 打好的包
+*.zip
+*.7z
+dist/
+build/
+
+# 本地打包暂存与产物（不入库）
+.build/
+release/
